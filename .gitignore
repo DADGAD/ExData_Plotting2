@@ -7,6 +7,6 @@
 # R data files from past sessions
 .Rdata
 
-# The data file
-summarySCC_PM25.rds
+# The data files
+*.rds
 
