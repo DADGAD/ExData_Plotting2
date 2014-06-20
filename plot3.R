@@ -21,7 +21,7 @@ draw.plot3 <- function() {
   facet_wrap(~Type, nrow=2, ncol=2) + 
   xlab("Year") + 
   ylab("") + 
-  ggtitle(expression("Emissions of" ~ PM[2.5] ~ "by Source Type (tons)")) + 
+  ggtitle(expression("Emissions of" ~ PM[2.5] ~ "in Baltimore, MA by Source Type (tons)")) + 
   geom_text(data=by.year.type, aes(label=format(Total, digits=3)), 
             position=position_dodge(width=0.9), vjust=-0.35, size=4)  
 
