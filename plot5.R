@@ -1,20 +1,21 @@
 library("ggplot2")
 
-draw.plot4 <- function() {
+draw.plot5 <- function() {
 
   # Read data
   data <- readRDS("summarySCC_PM25.rds")
   cls <- readRDS("Source_Classification_Code.rds")
+  data <- data[data$fips == "24510",]
   data$type <- factor(data$type)
   data$year <- factor(data$year)
   
   # Prepare data
-  cls.coal <- subset(cls, grepl("coal", cls[["Short.Name"]], 
+  cls.veh <- subset(cls, grepl("veh", cls[["EI.Sector"]], 
                                 ignore.case=TRUE), select=c(SCC, EI.Sector, SCC.Level.One, SCC.Level.Two))
-  data <- merge(data, cls.coal, by=c("SCC"))
-  by.year.type <- aggregate(data$Emissions, list(Year=data$year, Type=data$SCC.Level.One), sum)
+  data <- merge(data, cls.veh, by=c("SCC"))
+  by.year.type <- aggregate(data$Emissions, list(Year=data$year, Type=data$SCC.Level.Two), sum)
   colnames(by.year.type)[3] <- "Total"
-  by.year.type$Total = by.year.type$Total / 1000 
+  by.year.type$Total = by.year.type$Total
   
   # Squash all misc categories and re-aggregate
   by.year.type$Type <- as.character(by.year.type$Type)  
@@ -33,9 +34,9 @@ draw.plot4 <- function() {
   facet_wrap(~Type, ncol=2) + 
   xlab("Year") + 
   ylab("") + 
-  ggtitle(expression("Emissions of" ~ PM[2.5] ~ "From Coal Sources (1000 of tons)")) + 
+  ggtitle(expression("Emissions of" ~ PM[2.5] ~ "in Baltimore, MA From Vehicle Sources (tons)")) + 
   geom_text(data=by.year.type, aes(label=format(Total, digits=2)), 
             position=position_dodge(width=0.9), vjust=-0.35, size=4)  
 
-  ggsave(file="plot4.png")
+  ggsave(file="plot5.png")
 }
